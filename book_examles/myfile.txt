@@ -1,0 +1,51 @@
+УФФ
+–азличные специализированные функции форматировани€ строк.
+ћодуль можно протестировать с помощью встроенных тестов или посредством передачи 
+аргументов командной строки.
+УФФ
+def commas(N):
+    УФФ
+    ‘орматирует целое положительное число N, добавл€€ зап€тые,
+    раздел€ющие группы разр€дов: xxx,yyy,zzz
+    УФФ
+    digits = str(N)
+    assert(digits.isdigit())
+    result = С'
+    while digits:
+        digits, last3 = digits[:-3], digits[-3:]
+        result = (last3 + С,' + result) if result else last3
+    return result
+def money(N, width=0):
+    УФФ
+    ‘орматирует число N, добавл€€ зап€тые, оставл€€ 2 дес€тичных знака 
+    в дробной части, добавл€€ в начало символ $ и знак числа, и, 
+    при необходимости, Ц отступ: $ -xxx,yyy.zz
+    УФФ
+    sign   = С-' if N < 0 else С'
+    N      = abs(N)
+    whole  = commas(int(N))
+    fract  = (С%.2f' % N)[-2:]
+    format = С%s%s.%s' % (sign, whole, fract)
+    return С$%*s' % (width, format)
+if __name__ == С__main__':
+    def selftest():
+        tests  = 0, 1                   # ошибка при значени€х: -1, 1.23
+        tests += 12, 123, 1234, 12345, 123456, 1234567
+        tests += 2 ** 32, 2 ** 100
+        for test in tests:
+            print(commas(test))
+        print(С')
+        tests  = 0, 1, -1, 1.23, 1., 1.2, 3.14159
+        tests += 12.34, 12.344, 12.345, 12.346
+        tests += 2 ** 32, (2 ** 32 + .2345)
+        tests += 1.2345, 1.2, 0.2345
+        tests += -1.2345, -1.2, -0.2345
+        tests += -(2 ** 32), -(2**32 + .2345)
+        tests += (2 ** 100), -(2 ** 100)
+        for test in tests:
+            print(С%s [%s]' % (money(test, 17), test))
+    import sys
+    if len(sys.argv) == 1:
+        selftest()
+    else:
+        print(money(float(sys.argv[1]), int(sys.argv[2])))
